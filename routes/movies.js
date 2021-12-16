@@ -17,6 +17,8 @@ router.get("/", async (req, res) => {
 
 router.post("/", [auth], async (req, res) => {
   const { error } = validate(req.body);
+      const value = req.body.title;
+    console.log(value)
   if (error) return res.status(400).send(error.details[0].message);
 
   const genre = await Genre.findById(req.body.genreId);
@@ -24,6 +26,7 @@ router.post("/", [auth], async (req, res) => {
 
   const movie = new Movie({
     title: req.body.title,
+ 
     genre: {
       _id: genre._id,
       name: genre.name
@@ -31,7 +34,9 @@ router.post("/", [auth], async (req, res) => {
     numberInStock: req.body.numberInStock,
     dailyRentalRate: req.body.dailyRentalRate,
     publishDate: moment().toJSON()
+
   });
+
   await movie.save();
 
   res.send(movie);
